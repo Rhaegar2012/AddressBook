@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AddressBook.Data;
+using AddressBook.Services.Interfaces;
+using AddressBook.Services;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -26,9 +28,11 @@ namespace AddressBook
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Register entity framework service DbContext
+            //Register entity framework service DbContext updated for Heroku
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(DataUtility.GetConnectionString(Configuration)));
+            services.AddScoped<IImageService, BasicImageService>();
+
             services.AddControllersWithViews();
         }
 
